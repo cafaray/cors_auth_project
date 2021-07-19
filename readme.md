@@ -62,28 +62,33 @@ npm install nodemon -D
 
 ## How to Create a Node.js Server and Connect your Database
 
-Now, add the following snippets to your app.js, index.js, database.js, and .env files in that order to establish our Node.js server and connect our database.
+Now, add the following snippets to your app.js, index.js, database.js, and .env files in that order to establish our Node.js server and connect our database on a docker container. Write connection in the [database.js](./config/database.js) and set the variables in [.env](./.env) file.
 
-In our database.js.:
+Start the database server using an image for Mongo, here I'm using the latest version:
 
-config/database.js:
-
-
-The database to use is MongoDB in docker mode:
-
+```
 docker run -d --name mongodb \   
     -v /Users/wendigo/dev/mongo/data:/data/db \
     -e MONGO_INITDB_ROOT_USERNAME=sysadmin \
     -e MONGO_INITDB_ROOT_PASSWORD='elPaso01+' \
     mongo
+```
 
-docker ps
+Once executed, take a look and verify that container is running ...
 
-export container-id=4229f5abb52d
+`docker ps`
 
-docker container inspect ${container-id} | grep "IPAddress:"
+For more detailed information about the container, you can execute the next command
 
-docker container exec -it ${container-id} bash
+`docker container inspect mongodb`
+
+Connect to the container, and verify you have access to the database and test some mongo commands like: `show databases` or `use test` and `db.someCollection.find()`
+
+`docker container exec -it mongodb bash`
+ 
+In my case, I've prepare a docker compose file to execute the container and improve with security, here the [content of the file](./mongodb/docker-compose.yaml) 
+
+Execute the same previous command tests to verify the container is working propery.
 
 ## Create Schema for user
 
